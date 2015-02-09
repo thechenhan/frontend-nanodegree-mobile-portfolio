@@ -3,46 +3,39 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content=" FILL ME IN ">
-    <meta name="author" content=" FILL ME IN ">
-    <title>Cameron Pittman: Portfolio</title>
+    <meta name="description" content="This is project4 for Udacity Front-end Web Developer Nanodegree">
+    <meta name="author" content="Han CHEN">
+    <title>Han Chen - Web Performance Optimization Project</title>
 
-    <!-- Hmm, what is the impact of web fonts on speed? Measure it... -->
-    <!-- change the google font css inline to eliminate the CSS rending block-->
+    <!-- I optimized the google font calling. Change the google font css inline to eliminate the CSS rending block-->
     <style>@font-face { font-family: 'Open Sans'; font-style: normal; font-weight: 400; src: local('Open Sans'), local('OpenSans'), url(http://fonts.gstatic.com/s/opensans/v10/cJZKeOuBrn4kERxqtaUH3ZBw1xU1rKptJj_0jans920.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000; } @font-face { font-family: 'Open Sans'; font-style: normal; font-weight: 700; src: local('Open Sans Bold'), local('OpenSans-Bold'), url(http://fonts.gstatic.com/s/opensans/v10/k3k702ZOKiLJc3WVjuplzBampu5_7CjHW5spxoeN3Vs.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000; }</style>
-
-
-    <!---->
+    
+    <!-- I put some header style setting inline, to eliminate external render-blocking JavaScript and CSS in above-the-fold content.-->
     <style>
     header { padding: 0 0.5em; color: #C90B0B; }
     header img { border-radius: 40px; float: left; }
     header p { font-size:1.5em; font-weight: bold; padding-left: 4em;}
     header p span { font-size: 0.8em; font-weight: normal;}
     </style>
-    <!-- <link href="css/style.css" rel="stylesheet"> -->
+    <!-- Use CSS media queries for responsiveness and eliminate rendering block.-->
     <link href="css/print.css" rel="stylesheet" media="print">
-  
-
-
     <script>
       (function(w,g){w['GoogleAnalyticsObject']=g;
       w[g]=w[g]||function(){(w[g].q=w[g].q||[]).push(arguments)};w[g].l=1*new Date();})(window,'ga');
-
-      // TODO: replace with your Google Analytics profile ID.
-      ga('create', 'UA-XXXX-Y');
+      ga('create', 'UA-59569604-1', 'auto');
       ga('send', 'pageview');
     </script>
+    <!--Since these js are not critical used for rendering, I put the async tag here to optimize-->
     <script async src="http://www.google-analytics.com/analytics.js" ></script>
     <script async src="js/perfmatters.js"></script>
-
   </head>
 
   <body>
     <header>
-      <a href="/"><img src="img/profilepic.jpg"></a>
-      <p>Cameron Pittman<br><span>Course Developer</span></p>
+      <a href="/"><img src="img/profilepic.jpg" height="70" width="70"></a>
+      <p>Han Chen<br><span>Front-end Web Developer</span></p>
     </header>
-
+    <!-- Load the remaining css style -->
     <script>
       var cb = function() {
         var l = document.createElement('link'); l.rel = 'stylesheet';
@@ -57,7 +50,7 @@
 
     <div class="container">
       <div class="hero">
-        <strong>I love web development!</strong> This is a template for a simple portfolio. I decided to use it to showcase a few Udacity courses I've taken and some teaching work, but you can use it to showcase any kind of project that you want the world to see :) <br> Contact me: me@email.com
+        <strong>I love web development!</strong> This is the project 4 - web performance optimization project - for the nanodegree of Front-End web developer in Udacity. There are two goals in this project. 1st, get at least 90 score of this page in Google PageSpeed Insights testing. 2nd, optimize the animiation in pizza.html to get 60hz FPS. This is a template for a simple portfolio. These contents are not real, and only created for this project. <br> Contact me: thechenhan@gmail.com
       </div>
 
       <div class="content">

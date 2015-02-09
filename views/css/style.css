@@ -29,15 +29,41 @@ form {
   font-weight: 800;
 }
 
+/* I optimized the .mover and .randomPizzaContrainer class to reduce the animation time*/
+/* Using the graphics acceleration function to finish these function*/
+/* For more information: http://blog.teamtreehouse.com/increase-your-sites-performance-with-hardware-accelerated-css*/
+
 .mover {
   position: fixed;
   width: 256px;
   z-index: -1;
+  
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden; /* Chrome & Safari */
+  -moz-backface-visibility:hidden;  /* Firefox */
+  -ms-backface-visibility:hidden;   /* Internet Explorer */
+
+  -webkit-perspective: 1000;
+  -moz-perspective: 1000;
+  -ms-perspective: 1000;
+  perspective: 1000;
 }
 
 .randomPizzaContainer {
   float: left;
   display: flex;
+  
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden; /* Chrome & Safari */
+  -moz-backface-visibility:hidden;  /* Firefox */
+  -ms-backface-visibility:hidden;   /* Internet Explorer */
+
+  -webkit-perspective: 1000;
+  -moz-perspective: 1000;
+  -ms-perspective: 1000;
+  perspective: 1000;
+}
+
 }
 
 .randomPizzaContainer:after {

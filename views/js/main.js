@@ -1,3 +1,7 @@
+//Udacity: Han
+//Data: 2015 - 2 - 9
+//For prject 4 of front-end developer nano degree
+
 /*
 Welcome to the 60fps project! Your goal is to make Cam's Pizzeria website run
 jank-free at 60 frames per second.
@@ -421,7 +425,8 @@ var resizePizzas = function(size) {
 
   changeSliderLabel(size);
 
-  // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
+  // Returns the size difference to change a pizza element from one size to another. 
+  //Called by changePizzaSlices(size).
   function determineDx (elem, size) {
     var oldwidth = elem.offsetWidth;
     var windowwidth = document.querySelector("#randomPizzas").offsetWidth;
@@ -429,6 +434,7 @@ var resizePizzas = function(size) {
 
     // TODO: change to 3 sizes? no more xl?
     // Changes the slider value to a percent width
+     
     function sizeSwitcher (size) {
       switch(size) {
         case "1":
@@ -441,19 +447,24 @@ var resizePizzas = function(size) {
           console.log("bug in sizeSwitcher");
       }
     }
-
+    
     var newsize = sizeSwitcher(size);
     var dx = (newsize - oldsize) * windowwidth;
 
     return dx;
   }
 
+  // I optimized these function. I moved all of the variables out of the loop, 
+  // because these values are constant, we only need to calculate once. 
+  // Reduced the "change size" time from ~95ms to less than 1ms.
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+    var randomPizzaArray = document.querySelectorAll(".randomPizzaContainer");
+    var dx = determineDx(randomPizzaArray[0], size);
+    var randomPizzaOffsetWidth = randomPizzaArray[0].offsetWidth;
+    var newwidth = (randomPizzaOffsetWidth + dx) + 'px';
+    for (var i = 0; i < randomPizzaArray.length; i++) {
+      randomPizzaArray[i].style.width = newwidth;
     }
   }
 
@@ -483,6 +494,9 @@ console.log("Time to generate pizzas on load: " + timeToGenerate[0].duration + "
 // Iterator for number of times the pizzas in the background have scrolled.
 // Used by updatePositions() to decide when to log the average time per frame
 var frame = 0;
+var item;
+var itemlength;
+
 
 // Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
 function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
@@ -498,42 +512,95 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
 // Moves the sliding background pizzas based on scroll position
+// I optimized this function. 
+// Method 1, pre-save the .mover class, to reduce the selection time.
+// Method 2, rather than update the "left" property which require layout, paint and composite time
+// I used transform method which only takes composite time.
+// Method 3, I used Hardware-Accelerated CSS, backface-visibility and perspective. (refer to the css file)
+// Reference 1: http://www.html5rocks.com/en/tutorials/speed/high-performance-animations/
+// Reference 2: http://blog.teamtreehouse.com/increase-your-sites-performance-with-hardware-accelerated-css
+// Reference 3: http://http://jankfree.org/
+// Reference 4: https://www.youtube.com/watch?v=YyQYhhy1dZI
+
 function updatePositions() {
-  frame++;
-  window.performance.mark("mark_start_frame");
+    frame++;
+    window.performance.mark("mark_start_frame");
 
-  var items = document.querySelectorAll('.mover');
-  for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
-  }
+    for (var i = 0; i < itemlength; i++) {
+        var phase = Math.sin((lastScrollY / 1250) + (i % 5));
+        items[i].style.WebkitTransform = "translateX(" + 100 * phase + "px)"; //Chrome and Sarafi
+        items[i].style.MozTransform = "translateX(" + 100 * phase + "px)"; //Firefox
+        items[i].style.msTransform = "translateX(" + 100 * phase + "px)"; //IE
+        items[i].style.OTransform = "translateX(" + 100 * phase + "px)"; //Opera
+        items[i].style.transform = "translateX(" + 100 * phase + "px)"; //others
+    }
 
-  // User Timing API to the rescue again. Seriously, it's worth learning.
-  // Super easy to create custom metrics.
-  window.performance.mark("mark_end_frame");
-  window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
-  if (frame % 10 === 0) {
-    var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
-    logAverageFrame(timesToUpdatePosition);
+    // User Timing API to the rescue again. Seriously, it's worth learning.
+    // Super easy to create custom metrics.
+    window.performance.mark("mark_end_frame");
+    window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
+    if (frame % 10 === 0) {
+        var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
+        logAverageFrame(timesToUpdatePosition);
+    }
+}
+
+/* Newly Added Optimized Code */
+var lastScrollY = 0;
+var ticking = false;
+
+function onScroll() {
+  lastScrollY = window.scrollY;
+  requestTick();
+}
+
+function requestTick() {
+  if (!ticking) {
+     requestAnimationFrame(update);
+     ticking = true;
   }
 }
 
+function update() {
+  ticking = false;
+  updatePositions(); 
+}
+
 // runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
+// I optimized this function. 
+// Before optimization, the updatePosition function will be called as soon as the user scrolls the window,
+// It does not give the best performance. I use the requestAnimationFrame() function to get the best
+// performance of the browers. In other to avoid multi-calling of the requestAnimationFrame when the 
+// users consecutivly scroll the window, I set up a gobal flag varible ticking. If ticking = true, means
+// the updating is running, the following requests will be blocked. Only if the ticking = false (default),
+// the requestAnimationFrame() will be called.
+// Reference: http://www.html5rocks.com/en/tutorials/speed/animations/
+window.addEventListener('scroll', onScroll, false);
+
 
 // Generates the sliding pizzas when the page loads.
+// I optimized thesde code. 
+// Method 1, reduce the pizza number from 200 to a suitable amount. It depends on the windoe sizes.
+// Mtthod 2, I pre-save the .mover class. It'll save the time to pick these classes.
+// Reference: https://github.com/bahalps/frontend-nanodegree-mobile-portfolio
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
-    var elem = document.createElement('img');
-    elem.className = 'mover';
-    elem.src = "images/pizza.png";
-    elem.style.height = "100px";
-    elem.style.width = "73.333px";
-    elem.basicLeft = (i % cols) * s;
-    elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+  for (var j = 0, height = window.screen.height; j < height; j += s) {
+    for (var i = 0, width = window.screen.width; i < width; i += s) {
+      var elem = document.createElement('img');
+      elem.className = 'mover';
+      elem.src = "images/pizza.png";
+      elem.style.height = "100px";
+      elem.style.width = "73.333px";
+      elem.style.left = i + 'px';
+      elem.style.top = j + 'px';
+      document.querySelector("#movingPizzas1").appendChild(elem);
+    }
   }
+
+  items = document.querySelectorAll('.mover');
+  itemlength = items.length;
+  
   updatePositions();
 });
