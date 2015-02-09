@@ -36,4 +36,3 @@ Thank you all!
 * https://github.com/bahalps/frontend-nanodegree-mobile-portfolio
 * https://github.com/bahalps/frontend-nanodegree-mobile-portfolio
 * https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/index?hl=en
-* 
