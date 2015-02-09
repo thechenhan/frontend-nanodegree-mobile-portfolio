@@ -13,8 +13,9 @@ Mainly modified files: index.html, /views/js/main.js, and /views/css/style.css.
 * I optimized the google font calling. Change the google font css inline to eliminate the CSS rending block.
 * I put some header style setting inline, to eliminate external render-blocking JavaScript and CSS in above-the-fold content.
 * Use CSS media queries for responsiveness and eliminate rendering block.
-* Compress the pictures size, for pizza.jpg.
+* In order to improve the content efficiency, I used https://kraken.io/ to compress the pictures size, for pizza.jpg. In order to maintain the code is readable, I didn't compress them to oneline. 
 * Put async tag to google analytics and perfmatters to remove these js files out of CRP.
+* Some server side optimization work can be still done. But it is limited by the github server. 
 
 ###Pizza.html
 * I optimized changePizzaSizes() function. I moved all of the variables out of the loop, because these values are constant, we only need to calculate once. Reduced the "change size" time from ~95ms to less than 1ms.
@@ -34,3 +35,5 @@ Thank you all!
 * http://www.html5rocks.com/en/tutorials/speed/animations/
 * https://github.com/bahalps/frontend-nanodegree-mobile-portfolio
 * https://github.com/bahalps/frontend-nanodegree-mobile-portfolio
+* https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/index?hl=en
+* 
